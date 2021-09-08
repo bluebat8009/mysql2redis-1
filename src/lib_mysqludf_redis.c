@@ -290,6 +290,8 @@ my_ulonglong redis_command(
 		return 1; 
 	}
 
+	//添加密码操作，就是如果有密码的话
+	reply = redisCommand(c,"auth rryz,aqfh");
 	if (args->arg_count == 3)
 	{
 		reply = redisCommand(c,cmd);
