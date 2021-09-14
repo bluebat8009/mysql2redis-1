@@ -263,6 +263,8 @@ my_ulonglong redis_command(
 	char *format = NULL;
 	char *value1 = NULL;
 	char *value2 = NULL;
+	char *docmd; //分割出来的命令
+	char *delim = "|||"; //分割字符串
 	if (args->arg_count == 5)
 	{
 		format = args->args[2];
@@ -291,10 +293,21 @@ my_ulonglong redis_command(
 	}
 
 	//添加密码操作，就是如果有密码的话
-	reply = redisCommand(c,"auth rryz,aqfh");
+	//reply = redisCommand(c,"auth rryz,aqfh");
 	if (args->arg_count == 3)
 	{
-		reply = redisCommand(c,cmd);
+		//||| 分割一下
+		/**
+		 * 使用|||分割多个命令连续执行
+		 */
+		docmd = strtok(cmd, delim);
+		while( docmd != NULL ) {
+		    reply = redisCommand(c,docmd);
+		    docmd = strtok(NULL, delim);
+		}
+		//分割结束
+
+	    //reply = redisCommand(c,cmd);
 	}
 	else if (args->arg_count == 5)
 	{
